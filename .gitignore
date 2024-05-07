@@ -6,6 +6,20 @@ __pycache__/
 # C extensions
 *.so
 
+# Protein sequence files
+*.fasta
+*.fas
+*.faa
+*.fa
+
+# Colab output files
+*.bibtex
+*.json
+*.txt
+*.a3m
+*.png
+*.pdb
+
 # Distribution / packaging
 .Python
 build/
