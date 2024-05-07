@@ -1,9 +1,9 @@
 import os
-import re
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import date, timedelta
+from utils import parse_stoichiometry
 
 casp_round = 16
 
@@ -43,11 +43,10 @@ def save_subunits(target_id, sequences, save_fn='subunits.fasta'):
     
     print(f'Saved subunit sequences to\t{save_path}')
             
-def save_target(target_id, sequences, stoichiometry_info, save_fn='target.fasta'):
+def save_target(target_id, sequences, stoichiometry, save_fn='target.fasta'):
     save_path = os.path.join(target_id, save_fn)
     
-    matches = re.findall(r'([A-Z])(\d+)', stoichiometry_info)
-    counts = [(ord(letter)-65, int(count)) for letter, count in matches]
+    counts = parse_stoichiometry(stoichiometry)
     max_count = max(count for _, count in counts)
     total_count = sum(count for _, count in counts)
     current_count = 0
