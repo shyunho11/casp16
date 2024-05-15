@@ -33,6 +33,7 @@ __pycache__/
 
 # Private directory
 private
+hhsuite_dbs
 
 # Distribution / packaging
 .Python
