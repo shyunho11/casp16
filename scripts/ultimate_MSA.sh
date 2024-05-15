@@ -9,6 +9,7 @@ done
 
 cat *.fasta > ultimate.fasta
 sed '/>/! s/-//g' ultimate.fasta | tr '[:lower:]' '[:upper:]' > input.fasta
+rm ultimate.fasta
 
 mkdir mmseqs
 
