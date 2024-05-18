@@ -51,5 +51,4 @@ for pdb_file in "$dir_name"/*.pdb; do
     fi
 done
 
-# I assume you want to call a Python script here:
 python /home/casp16/casp16_server/bin/submit_CASP16.py $tar_id ${group_name^^}
