@@ -1,40 +1,31 @@
 #!/bin/bash
 
-# Check if directory argument is provided
-if [ -z "$1" ]; then
-    echo "Usage: $0 <directory>"
+# Check if directory and prefix arguments are provided
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Usage: $0 <directory> <prefix>"
     exit 1
 fi
 
 input_dir=$1
-candidates_dir="candidates"
+prefix=$2
+candidates_dir="$input_dir/candidates"
 mkdir -p "$candidates_dir"
 
-# Step 1: Read ColabFold log after 'reranking models'
-data=$(awk '/reranking models by/{flag=1} flag' "$input_dir/log.txt")
-
-# Step 2: Calculate pLDDT * pTM * ipTM, then sort and take top 5
-echo "$data" | grep 'rank_' | awk '{ 
-    model_name = $3
-    match($4, /=([0-9.]+)/, arr)
-    pLDDT = arr[1]
-    match($5, /=([0-9.]+)/, arr)
-    pTM = arr[1]
-    match($6, /=([0-9.]+)/, arr)
-    ipTM = arr[1]
-    score = pLDDT * pTM * ipTM
-    printf "%s %.2f\n", model_name, score
-}' | sort -k2,2nr > "$input_dir/top_models.txt"
-
-cat "$input_dir/top_models.txt"
-
-# Step 3: Find corresponding .pdb files and copy them to the final directory with new names
-while IFS=" " read -r model_name score; do
-    pdb_file=$(find "$input_dir" -name "*${model_name}*.pdb")
-    if [[ -n "$pdb_file" ]]; then
-        cp "$pdb_file" "$candidates_dir/candidate_$(basename "$input_dir")_${score}.pdb"
-        echo "File saved as candidate_$(basename "$input_dir")_${score}.pdb"
-    else
-        echo "File not found"
-    fi
-done < "$input_dir/top_models.txt"
+# Find all .pdb files in subdirectories starting with the prefix and rename them
+find "$input_dir" -type d -name "${prefix}*" | while read -r sub_dir; do
+    for pdb_file in "$sub_dir"/*.pdb; do
+        if [[ -f "$pdb_file" ]]; then
+            # Extract the rank from the original filename
+            rank=$(basename "$pdb_file" | sed -n 's/.*_rank_\([0-9]\+\)_.*/\1/p')
+            if [[ -n "$rank" ]]; then
+                new_name="candidate_$(basename "$sub_dir")_rank${rank}.pdb"
+                cp "$pdb_file" "$candidates_dir/$new_name"
+                echo "File saved as $new_name"
+            else
+                echo "Rank not found in $pdb_file"
+            fi
+        else
+            echo "No .pdb files found in $sub_dir"
+        fi
+    done
+done
