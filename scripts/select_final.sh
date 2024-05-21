@@ -16,7 +16,7 @@ source ~/.bashrc
 
 conda activate af2rank
 data_dir="/home/iu/casp16/private/af2rank/"
-chain="A"
+chain="A,B"
 decoy_dir=$1
 
 python3 /home/iu/casp16/private/af2rank/af2rank_no_native_xTag.py --data_dir ${data_dir} --chain ${chain} --decoy_dir ${decoy_dir} --output_dir .

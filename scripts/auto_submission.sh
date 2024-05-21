@@ -1,54 +1,42 @@
 #!/bin/bash
 
-# THIS SCRIPT MUST BE LOCATED AT THE TARGET DIRECTORY (ex. /home/casp16/run/TS.human/T1201/)
-# FINAL MODELS SHOULD BE LOCATED IN THE SAME DIRECTORY
-
-tar_id=$(basename "$(pwd)")
-echo "***** Starting submission for $tar_id *****"
-
-read -p "Which group do you want to submit? " group_name
-if [ -f "submitted.$group_name" ]; then
-    # Ask if user wants to submit again
-    read -p "You have already submitted. Do you want to submit again? (y/n) " answer
-    if [[ "$answer" == "n" ]]; then
-        echo "Submission cancelled."
-        exit 0
-    else
-        rm "submitted.$group_name"
-        rm -r "submit.$group_name"
-    fi
+if [ -z "$1" ]; then
+  echo "Usage: $0 <final model path>"
+  exit 1
 fi
 
-dir_name="model.$group_name"
+input_directory="$1"
+group_name=$(basename "$input_directory" | cut -d'.' -f2)
 
-echo "Checking PDB files in $dir_name..."
+cd $input_directory
+current_directory=$(pwd)
+target_id=$(basename "$(dirname "$current_directory")")
 
-for pdb_file in "$dir_name"/*.pdb; do
-    echo "Processing $pdb_file..."
-    total_plddt=0
-    count=0
-    while read -r line; do
-        if [[ $line =~ ^ATOM ]]; then
-            plddt_value=$(echo "$line" | awk '{print $11}')
-            # Check for invalid pLDDT values
-            if (( $(echo "$plddt_value < 0 || $plddt_value > 100" | bc) )); then
-                echo "Error: pLDDT value $plddt_value out of valid range (0-100) in $pdb_file"
-                exit 1
-            fi
-            # Summing pLDDT values and counting entries
-            total_plddt=$(echo "$total_plddt + $plddt_value" | bc)
-            ((count++))
-        fi
-    done < "$pdb_file"
+echo "Target ID: $target_id"
+echo "Group Name: $group_name"
+echo ""
+
+for i in {1..5}
+do
+    echo "[model_$i.pdb]"
+    stoich_info=$(grep "STOICH" model_$i.pdb)
     
-    # Check if the pdb file is empty (or corrupted)
-    if [ $count -gt 0 ]; then
-        average_plddt=$(echo "scale=2; $total_plddt / $count" | bc)
-        echo "[Average pLDDT value] : $average_plddt"
+    if [ -z "$stoich_info" ]; then
+        echo "No stoich info"
     else
-        echo "Error: no valid ATOM records found in $pdb_file."
-        exit 1
+        echo "$stoich_info"
     fi
+    
+    grep -B 1 "^TER" model_$i.pdb | awk '/^ATOM/ {print $5, $6}'
+    echo ""
 done
 
-python /home/casp16/casp16_server/bin/submit_CASP16.py $tar_id ${group_name^^}
+read -p "Proceed [y/n]?: " answer
+if [[ "$answer" == "Y" || "$answer" == "y" ]]; then
+    python /home/casp16/casp16_server/bin/submit_CASP16.py $target_id ${group_name^^}
+    echo "Waiting for 10 seconds..."
+    sleep 10
+    python /home/casp16/casp16_server/bin/check_submit_status.py $target_id ${group_name}
+else
+    echo "Submission canceled."
+fi
