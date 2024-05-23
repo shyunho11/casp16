@@ -21,4 +21,4 @@ mkdir -p "$NEW_DIR"
 
 cd "$NEW_DIR"
 
-python -u /home/iu/casp16/scripts/cluster_with_tmscore.py "$PDB_DIR"
+python -u /home/iu/casp16/python/cluster_with_tmscore.py "$PDB_DIR"
