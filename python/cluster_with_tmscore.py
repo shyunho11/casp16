@@ -25,7 +25,7 @@ def find_optimal_clusters(data, max_k):
     optimal_k = max(silhouettes, key=lambda x: x[1])[0]
     return optimal_k
 
-def main(directory, max_clusters=10):
+def main(directory, output_directory, max_clusters=10):
     pdb_files = glob.glob(os.path.join(directory, '*.pdb'))
     for i, pdb_file in enumerate(pdb_files):
         print(f'PDB {i}\t{os.path.basename(pdb_file)}')
@@ -48,8 +48,11 @@ def main(directory, max_clusters=10):
             if progress % 1000 == 0:
                 print(f'Calculated {progress}th TMscore: {tmscore_matrix[i, j]}')
         tmscore_matrix[i, i] = 1.0  # TM-score with itself is always 1.0
-                
-    np.savetxt('tmscore_matrix.csv', tmscore_matrix, delimiter=',')
+    
+    # Create output directory
+    os.makedirs(output_directory, exist_ok=True)
+
+    np.savetxt(os.path.join(output_directory, 'tmscore_matrix.csv'), tmscore_matrix, delimiter=',')
     
     tsne = TSNE(n_components=2, metric='precomputed', init='random')
     tsne_result = tsne.fit_transform(1 - tmscore_matrix)  # TM-score is a similarity metric
@@ -62,24 +65,25 @@ def main(directory, max_clusters=10):
     
     for cluster_num in range(optimal_clusters):
         cluster_pdb_files = [pdb_files[i] for i in range(n) if labels[i] == cluster_num]
-        with open(f'cluster_{cluster_num + 1}.txt', 'w') as f:
+        with open(os.path.join(output_directory, f'cluster_{cluster_num + 1}.txt'), 'w') as f:
             for pdb_file in cluster_pdb_files:
                 f.write(f'{os.path.basename(pdb_file)}\n')
-        print(f'Cluster {cluster_num + 1} saved as cluster_{cluster_num + 1}.txt')
-
+        print(f'Cluster {cluster_num + 1} saved as {os.path.join(output_directory, f"cluster_{cluster_num + 1}.txt")}')
+    
     plt.scatter(tsne_result[:, 0], tsne_result[:, 1], c=labels)
     plt.xlabel('Component 1')
     plt.ylabel('Component 2')
     plt.title(f'PDB Structure Clustering using t-SNE (optimal clusters={optimal_clusters})')
-    plt.savefig('tsne_plot.png')
+    plt.savefig(os.path.join(output_directory, 'tsne_plot.png'))
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Cluster PDB files based on structural similarity.")
     parser.add_argument("directory", type=str, help="Directory containing PDB files")
+    parser.add_argument("output_directory", type=str, help="Output directory for results")
     parser.add_argument("--max_clusters", type=int, default=10, help="Maximum number of clusters to test for optimal number (default: 10)")
     
     args = parser.parse_args()
 
-    main(args.directory, args.max_clusters)
+    main(args.directory, args.output_directory, args.max_clusters)

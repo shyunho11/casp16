@@ -6,22 +6,34 @@
 #SBATCH -c 4
 #SBATCH -o log_af2rank_%A.log
 
-if [ -z "$1" ]; then
-    echo "Usage: $0 <decoy directory path>"
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <decoy directory path> <number of chains>"
     exit 1
 fi
 
 set -e
 source ~/.bashrc
-
 conda activate af2rank
+
+get_chain_text() {
+    local num=$1
+    local letters=()
+    
+    for ((i=0; i<num; i++)); do
+        letter=$(printf "\x$(printf %x $((65 + i)))")
+        letters+=("$letter")
+    done
+    
+    IFS=','; echo "${letters[*]}"
+}
+
 data_dir="/home/iu/casp16/private/af2rank/"
-chain="A,B"
 decoy_dir=$1
+chain=$(get_chain_text $2)
 
 python3 /home/iu/casp16/private/af2rank/af2rank_no_native_xTag.py --data_dir ${data_dir} --chain ${chain} --decoy_dir ${decoy_dir} --output_dir .
 
-rm -r af2rank_output
+mv af2rank_output "$(basename $1)_af2rank_output"
 rm 0.pdb 
 rm 1.pdb
 

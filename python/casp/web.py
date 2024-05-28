@@ -3,11 +3,20 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import date, timedelta
-from utils import parse_stoichiometry
 
 casp_round = 16
 
-def get_target_info(entry_date=None, ignore_list=['rna', 'server']):
+def get_target_sequence(target_id):
+    target_url = f'https://predictioncenter.org/casp{casp_round}/target.cgi?target={target_id}&view=sequence'
+    response = requests.get(target_url)
+    response.raise_for_status()
+    
+    # filter out all headers and blank strings
+    sequences = [seq for seq in response.text.split('\n') if not seq.startswith('>') and seq]
+    return sequences
+
+# This function requires 'pip install lxml'
+def get_target_table(entry_date=None, ignore_list=['rna', 'server']):
     target_list_url = f'https://predictioncenter.org/casp{casp_round}/targetlist.cgi'
     response = requests.get(target_list_url)
     response.raise_for_status()
@@ -63,20 +72,14 @@ def save_target(target_id, sequences, stoichiometry, save_fn='target.fasta'):
                         f.write(':')
         
     print(f'Saved target sequence to\t{save_path}')
-
-def get_target_sequence(target_id, stoichiometry='A1'):
+    
+def save_target_files(target_id, stoichiometry='A1'):
     print('-'*50)
     print(f'TARGET\t\t{target_id}')
     print(f'STOICHIOMETRY\t{stoichiometry}')
-    
-    target_url = f'https://predictioncenter.org/casp{casp_round}/target.cgi?target={target_id}&view=sequence'
-    response = requests.get(target_url)
-    response.raise_for_status()
-    
     os.makedirs(target_id, exist_ok=True)
     
-    # filter out all headers and blank strings
-    sequences = [seq for seq in response.text.split('\n') if not seq.startswith('>') and seq]
+    sequences = get_target_sequence(target_id)
     
     if stoichiometry == 'A1':
         save_target(target_id, sequences, stoichiometry)
@@ -88,6 +91,15 @@ def get_target_sequence(target_id, stoichiometry='A1'):
         
         
 if __name__ == "__main__":
-    new_targets = get_target_info()
-    for _, row in new_targets.iterrows():
-        get_target_sequence(row['Tar-id'], row['Stoichiom.'].strip().replace(' ', ''))
+    import sys
+    
+    if len(sys.argv) > 1:
+        try:
+            save_target_files(sys.argv[1], sys.argv[2])
+        except:
+            print('Usage: python web.py <TARGET ID> <STOICHIOMETRY>')
+            sys.exit(1)
+    else:
+        new_targets = get_target_table()
+        for _, row in new_targets.iterrows():
+            save_target_files(row['Tar-id'], row['Stoichiom.'].strip().replace(' ', ''))

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [ "$#" -ne 3 ]; then
     echo "Usage: $0 <A3M file path/> <FASTA file path/> <query FASTA file>"
     exit 1
