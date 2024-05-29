@@ -6,10 +6,11 @@ if [ -z "$1" ]; then
 fi
 
 input_directory="$1"
-group_name=$(basename "$input_directory" | cut -d'.' -f2)
 
-cd $input_directory
+cd "$input_directory" || exit 1
+
 current_directory=$(pwd)
+group_name=$(basename "$current_directory" | cut -d'.' -f2)
 target_id=$(basename "$(dirname "$current_directory")")
 
 echo "Target ID: $target_id"
@@ -22,7 +23,7 @@ do
     stoich_info=$(grep "STOICH" model_$i.pdb)
     
     if [ -z "$stoich_info" ]; then
-        echo "No stoich info"
+        echo "No stoich info (add if UNK)"
     else
         echo "$stoich_info"
     fi

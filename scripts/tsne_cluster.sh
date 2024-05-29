@@ -17,7 +17,7 @@ output_dir="tsne_result"
 source ~/.bashrc
 conda activate study
 
-python -u /home/iu/casp16/python/cluster_with_tmscore.py . $output_dir
+python -u /home/iu/casp16/python/tsne_with_tmscore.py . $output_dir
 
 cd $output_dir
 

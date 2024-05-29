@@ -3,8 +3,10 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import date, timedelta
+from utils import parse_stoichiometry
 
 casp_round = 16
+casp_path = "/home/casp16/run/TS.human"
 
 def get_target_sequence(target_id):
     target_url = f'https://predictioncenter.org/casp{casp_round}/target.cgi?target={target_id}&view=sequence'
@@ -16,7 +18,7 @@ def get_target_sequence(target_id):
     return sequences
 
 # This function requires 'pip install lxml'
-def get_target_table(entry_date=None, ignore_list=['rna', 'server']):
+def get_target_table(entry_date=None, ignore_list=['nuca', 'server', 'ligand']):
     target_list_url = f'https://predictioncenter.org/casp{casp_round}/targetlist.cgi'
     response = requests.get(target_list_url)
     response.raise_for_status()
@@ -42,7 +44,7 @@ def get_target_table(entry_date=None, ignore_list=['rna', 'server']):
     return targets
 
 def save_subunits(target_id, sequences, save_fn='subunits.fasta'):
-    save_path = os.path.join(target_id, save_fn)
+    save_path = os.path.join(casp_path, target_id, save_fn)
     
     with open(save_path, 'w') as f:
         for i, sequence in enumerate(sequences):
@@ -53,7 +55,7 @@ def save_subunits(target_id, sequences, save_fn='subunits.fasta'):
     print(f'Saved subunit sequences to\t{save_path}')
             
 def save_target(target_id, sequences, stoichiometry, save_fn='target.fasta'):
-    save_path = os.path.join(target_id, save_fn)
+    save_path = os.path.join(casp_path, target_id, save_fn)
     
     counts = parse_stoichiometry(stoichiometry)
     max_count = max(count for _, count in counts)
@@ -77,7 +79,7 @@ def save_target_files(target_id, stoichiometry='A1'):
     print('-'*50)
     print(f'TARGET\t\t{target_id}')
     print(f'STOICHIOMETRY\t{stoichiometry}')
-    os.makedirs(target_id, exist_ok=True)
+    os.makedirs(os.path.join(casp_path, target_id), exist_ok=True)
     
     sequences = get_target_sequence(target_id)
     
