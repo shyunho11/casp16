@@ -32,7 +32,8 @@ __pycache__/
 *.7z
 
 # Private directory
-private
+af2rank
+extra
 hhsuite_dbs
 
 # Distribution / packaging
