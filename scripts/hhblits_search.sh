@@ -1,10 +1,14 @@
 #!/bin/bash
 #SBATCH -p cpu
 #SBATCH -J HHblits
-#SBATCH --mem=488gb
+#SBATCH --mem=320gb
 #SBATCH -w node02
-#SBATCH -c 80
+#SBATCH -c 64
 #SBATCH -o log_hhblits_%A.log
+
+# resources
+CPU=64
+MEM=320
 
 if [ -z "$1" ]; then
     echo "Usage: $0 <subunits.FASTA file>"
@@ -17,10 +21,6 @@ mkdir -p subunits
 
 # input
 input_fasta=$1
-
-# resources
-CPU=80
-MEM=488
 
 # DB path
 uniref="/public_data/db_protSeq/uniref30/2023_02/UniRef30_2023_02"

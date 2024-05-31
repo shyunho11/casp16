@@ -1,10 +1,13 @@
 #!/bin/bash
 #SBATCH -p cpu
 #SBATCH -J UltimateMSA
-#SBATCH --mem=488gb
+#SBATCH --mem=320gb
 #SBATCH -w node02
-#SBATCH -c 80
+#SBATCH -c 64
 #SBATCH -o log_ultimate_%A.log
+
+# resources
+CPU=64
 
 set -e
 
@@ -17,9 +20,6 @@ fi
 a3m_path=$1
 fasta_path=$2
 query_fasta=$3
-
-# resources
-CPU=80
 
 # reformat.pl converts a3m to fasta
 for file in "${a3m_path}"*.a3m; do

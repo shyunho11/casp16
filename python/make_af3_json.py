@@ -2,8 +2,7 @@ import random
 import json
 import time
 import argparse
-from casp.web import get_target_sequence
-from casp.utils import parse_stoichiometry
+from casp.web import get_target_sequence, parse_stoichiometry
 
 def make_af3_json(target_id, stoichiometry, seed):
     protein_sequences = get_target_sequence(target_id)
