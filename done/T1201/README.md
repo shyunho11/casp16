@@ -1,7 +1,7 @@
 # COMMON INFO
 * All processes are *automated* by Bash/Python script.
 * All models are ranked by *pLDDT * pTM * ipTM* score.
-* All models are submitted after **E minimization**.
+* All models are submitted after **relaxation**.
 <br/>
 <br/>
 

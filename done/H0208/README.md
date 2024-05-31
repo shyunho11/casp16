@@ -1,7 +1,7 @@
 # COMMON INFO
 * All processes are *automated* by Bash/Python script.
 * All final models are ordered by AF2Rank score.
-* All final models are submitted after **E minimization**.
+* All final models are submitted after **relaxation**.
 <br/>
 <br/>
 

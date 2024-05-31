@@ -46,6 +46,10 @@ mmseqs createdb $query_fasta mmseqs/query_db
 mmseqs search mmseqs/query_db mmseqs/ultimate_db mmseqs/result mmseqs/tmp --num-iterations 5 -s 20 --max-seqs 10000 --min-seq-id 0.3 --search-type 1 --threads $CPU
 mmseqs result2msa mmseqs/query_db mmseqs/ultimate_db mmseqs/result ultimate.a3m --msa-format-mode 2
 
+# additional filtering
+hhfilter -i ultimate.a3m -o ultimate9050.a3m -id 90 -cov 50
+hhfilter -i ultimate.a3m -o ultimate9575.a3m -id 95 -cov 75
+
 # clean up
 rm -r mmseqs
 rm *.dbtype
