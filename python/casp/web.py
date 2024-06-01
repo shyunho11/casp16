@@ -132,16 +132,9 @@ def save_target_files(target_id, stoichiometry='A1'):
 if __name__ == "__main__":
     import sys
     
-    if len(sys.argv) > 1:
-        try:
-            save_target_files(sys.argv[1], sys.argv[2])
-        except:
-            print('Usage: python web.py <TARGET ID> <STOICHIOMETRY>')
-            sys.exit(1)
-    else:
-        from datetime import date, timedelta
-        
-        today = (date.today() - timedelta(days=1)).strftime("%Y-%m-%d")
-        new_targets = get_target_by_date(today)
-        for _, row in new_targets.iterrows():
-            save_target_files(row['Tar-id'], row['Stoichiom.'])
+    if len(sys.argv) != 3:
+        print('Usage: python web.py <TARGET ID> <STOICHIOMETRY>')
+        sys.exit(1)
+    
+    save_target_files(sys.argv[1], sys.argv[2])
+    

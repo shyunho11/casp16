@@ -1,14 +1,13 @@
 #!/bin/bash
 
-# Check if directory and prefix arguments are provided
-if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "Usage: $0 <directory> <prefix>"
+if [ -z "$1" ] then
+    echo "Usage: $0 <prefix of directories containing PDB files>"
     exit 1
 fi
 
-input_dir=$1
-prefix=$2
-candidates_dir="$input_dir/candidates"
+prefix=$1
+candidates_dir="${prefix}_candidates"
+
 mkdir -p "$candidates_dir"
 
 # Find all .pdb files in subdirectories starting with the prefix and rename them

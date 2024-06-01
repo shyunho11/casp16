@@ -26,6 +26,9 @@ save_target_template(target_id)
 # Define the content of the .sh file
 script_content_1 = """#!/bin/bash
 
+source /home/iu/.bashrc
+export PATH=/opt/ohpc/pub/apps/anaconda3/bin/python:/opt/ohpc/pub/apps/anaconda3/sbin:/opt/ohpc/pub/mpi/libfabric/1.13.0/bin:/opt/ohpc/pub/mpi/ucx-ohpc/1.11.2/bin:/opt/ohpc/pub/libs/hwloc/bin:/opt/ohpc/pub/mpi/openmpi4-gnu12/4.1.4/bin:/opt/ohpc/pub/compiler/gcc/12.2.0/bin:/opt/ohpc/pub/utils/prun/2.2:/opt/ohpc/pub/utils/autotools/bin:/opt/ohpc/pub/bin:/home/iu/.local/bin:/home/iu/bin:/opt/ohpc/pub/apps/anaconda3/condabin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/var/lib/snapd/snap/bin:/home/software/bin:/home/software/git/CCMpred/bin:/home/software/git/hh-suite/build/bin:/home/software/git/hh-suite/build/scripts:/home/software/git/gremlin3/bin:/home/software/zdock3.0.2_linux_x64:/opt/dell/srvadmin/bin:/home/iu/nemo/ngc-cli:/home/software/bin:/home/software/git/CCMpred/bin:/home/software/git/hh-suite/build/bin:/home/software/git/hh-suite/build/scripts:/home/software/git/gremlin3/bin:/home/software/zdock3.0.2_linux_x64
+
 # written by Heesoo Ki
 # wrapper for sbatch
 submit() {
@@ -48,7 +51,7 @@ CHAIN="{chains_string}"
 FASTA_PATH="/home/casp16/run/TS.human/{target_id}/target.fasta"
 RAW_DATA_DIR="/home/casp16/run/TS.human/{target_id}/target.decoys"
 MER="{mer}" # monomer or multimer
-SUBMIT_FORMAT="/home/casp16/run/TS.human/{target_id}/template.txt" # path to submit template (ref: CASP16 homepage)
+SUBMIT_FORMAT="/home/casp16/run/TS.human/{target_id}/submit_template.txt" # path to submit template (ref: CASP16 homepage)
 """
 
 script_content_3 = """
@@ -72,7 +75,7 @@ job_prev=$(submit -p $NODE_CPU -c $CPU --mem=${MEM}g -w node01 \
     -e "stderr" \
     --wrap="source ~/.bashrc; conda activate base; \
             echo \\"Preparing AF2Rank\\"; \
-            python $RUN_SCRIPT_DIR/prepare_AF2Rank.py \
+            python /home/iu/casp16/python/prepare_AF2Rank_advanced.py \
             --base_dir $BASE_DIR \
             --decoy_data_dir $RAW_DATA_DIR \
             --chain_list $CHAIN \
@@ -139,7 +142,7 @@ job_prev=$(submit -p $NODE_CPU -c $CPU --mem=${MEM}g -w node01 \
     --chdir="${BASE_DIR}/Massivefold.AF2Rank" \
     --wrap="source ~/.bashrc; conda activate base; \
             echo \\"Preparing Colabfold\\"; \
-            python $RUN_SCRIPT_DIR/prepare_Colabfold.py --base_dir $BASE_DIR --state $MER")
+            python /home/iu/casp16/python/prepare_ColabFold_advanced.py --base_dir $BASE_DIR --state $MER")
 
 ############################################################
 # 5. Run Colabfold
@@ -216,11 +219,12 @@ job_prev=$(submit -p $NODE_CPU -c $CPU --mem=${MEM}g -w node01 \
     --chdir="${BASE_DIR}" \
     --wrap="source ~/.bashrc; conda activate base; \
             echo \\"Matching Format\\"; \
-            python -u /home/casp16/run/TS.human/T2201/utils/fix_to_submit_format_revised.py --model_dir $BASE_DIR/pre.model.faker --format_pdb $SUBMIT_FORMAT --output_dir $BASE_DIR/model.faker")
+            python -u /home/casp16/run/TS.human/T2201/utils/fix_to_submit_format_revised.py --model_dir $BASE_DIR/pre.model.faker --format_pdb $SUBMIT_FORMAT --output_dir $BASE_DIR/model.faker; \
+            sbatch /home/iu/casp16/extra/send_telegram.sh \\"Phase 2 run for ${TARGET} has FINISHED!\\"")
 """
 
 # Define the file name for the .sh file
-script_filename = f'run_phase2_{target_id}.sh'
+script_filename = f'/home/casp16/run/TS.human/{target_id}/run_phase2_{target_id}.sh'
 
 # Write the script content to the .sh file
 with open(script_filename, 'w') as file:
