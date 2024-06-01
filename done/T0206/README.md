@@ -2,7 +2,7 @@
 * All processes are *automated* by Bash/Python script.
 * All models are ranked by pLDDT * pTM * ipTM score first.
 * Then, top 100 models are ranked by AF2Rank score.
-* All models are submitted after **relaxation**.
+* All models are submitted after **Relaxation**.
 <br/>
 <br/>
 

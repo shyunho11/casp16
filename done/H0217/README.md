@@ -4,7 +4,7 @@
 * model 1: best model among All experimental predictions
 * model 2-3: best model among ColabFold with UltimateMSA predictions
 * model 4-5: best model among MiniWorld prediction
-* All models are submitted after **relaxation**.
+* All models are submitted after **Relaxation**.
 <br/>
 <br/>
 
