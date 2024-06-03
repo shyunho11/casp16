@@ -20,7 +20,7 @@ conda activate RFdiffusion
 cd $1
 
 for file in *.pdb; do
-    python -u /home/casp16/util/str_relax.py -pdb_fn $file -out_prefix "RELAXED_$(basename "${file%.*}")" -disulf_cutoff 2.0
+    python -u /home/casp16/util/str_relax.py -pdb_fn $file -out_prefix "RELAXED_$(basename "${file%.*}")" # -disulf_cutoff 2.0
 done
 
 relaxed_dir="../final_relaxed"
@@ -28,7 +28,7 @@ mkdir -p $relaxed_dir
 
 for file in RELAXED*.pdb; do
     filename=$(basename "$file")
-    new_filename=${filename#RELAXED}
+    new_filename=${filename#RELAXED_}
     cp "$file" "$relaxed_dir/$new_filename"
     echo "File saved as $new_filename"
 done

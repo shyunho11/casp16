@@ -28,7 +28,8 @@ do
         echo "$stoich_info"
     fi
     
-    grep -B 1 "^TER" model_$i.pdb | awk '/^ATOM/ {print $5, $6}'
+    grep -B 1 "^TER" model_$i.pdb | awk '/^ATOM/ {chain_and_residue = substr($0, 22, 5); chain = substr(chain_and_residue, 1, 1); residue = substr(chain_and_residue, 2); print chain, residue}'
+    
     echo ""
 done
 

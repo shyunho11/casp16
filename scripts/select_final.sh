@@ -42,7 +42,7 @@ python -u /home/iu/casp16/python/parse_af2rank_log.py $log_file
 
 mkdir -p final_unrelaxed
 
-top_files=$(awk -F',' 'NR > 1 {print $2}' "RANK_BY_COMPOSITE.csv" | head -n 5)
+top_files=$(awk -F',' 'NR > 1 {print $1}' "RANK_BY_COMPOSITE.csv" | head -n 5)
 
 counter=1
 for file in $top_files; do

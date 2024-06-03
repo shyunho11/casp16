@@ -141,16 +141,6 @@ def get_templates_for_colabfold(score_file_AF, score_file_MULTIMER, output_path,
             
     sorted_dict = dict(sorted(merged_dict.items(), key=lambda item: item[1], reverse=True)[:10])
     
-    MiniWorld_dir = os.path.join(output_path, 'for_MiniWorld')
-    os.makedirs(MiniWorld_dir, exist_ok=True)
-    
-    with open(f'{output_path}/TOP_CANDIDATES_FROM_AF2RANK.txt', 'w') as f:
-        f.write('pdb_name, monomer: composite_score/multimer: custom_score(ptm*iptm*plddt)\n')
-        for pdb_file, score in sorted_dict.items():
-            pdb_name = os.path.basename(pdb_file)
-            f.write(f'{pdb_name},{score}\n')
-            os.symlink(pdb_file, os.path.join(MiniWorld_dir, pdb_name))
-            
     top_unique_list = [pdb_file for pdb_file, _ in sorted_dict.items()]
     selected_struct = reorder_structures(top_unique_list)
     
@@ -174,11 +164,13 @@ def main(args):
     output_path = os.path.join(base_dir, 'Massivefold.AF2Rank/')
     models_before_Emin_dir = os.path.join(base_dir, 'models_before_Emin')
     os.makedirs(models_before_Emin_dir, exist_ok=True)
+    MiniWorld_dir = os.path.join(base_dir, 'for_MiniWorld')
+    os.makedirs(MiniWorld_dir, exist_ok=True)
         
     selected_struct = get_templates_for_colabfold(AF_score_file, MULTI_score_file, output_path, input_pdb_dir, state)
         
     # Copy up to 4 structures for colabfold templates, and write residues with higher plddt than threshold in template dir
-    colabfold_templates = selected_struct[:4] if len(selected_struct) > 4 else selected_struct
+    colabfold_templates = selected_struct[:4]
     colabfold_templ_dir = os.path.join(base_dir, 'Massivefold.colabfold/templates')
     os.makedirs(colabfold_templ_dir, exist_ok=True)
     
@@ -187,7 +179,7 @@ def main(args):
         filter_pdb_by_bfactor(templ, output_pdb_file)
     
     # Copy 5 selected structure to the models_before_Emin_dir (for team FAKER)
-    if len(selected_struct) < 5: # in case we don't have 5 structures
+    if len(selected_struct) < 10: # in case we don't have 5 structures
         AF_top10_dict = process_score_file(AF_score_file, input_pdb_dir, state)
         for top10_pdb in AF_top10_dict.keys():
             if not top10_pdb in selected_struct:
@@ -196,7 +188,10 @@ def main(args):
     for i_struct, structure_file in enumerate(selected_struct[:5], start=1):
         destination_file = os.path.join(models_before_Emin_dir, f'FAKER_model_{i_struct}.pdb')
         shutil.copy(structure_file, destination_file)
-        
+    
+    for i_struct, structure_file in enumerate(selected_struct[:10], start=1):
+        destination_file = os.path.join(MiniWorld_dir, f'forMiniWorld_model_{i_struct}.pdb')
+        shutil.copy(structure_file, destination_file)
         
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
