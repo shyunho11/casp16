@@ -6,7 +6,7 @@ if [ -z "$1" ]; then
 fi
 
 prefix=$1
-candidates_dir="candidates_from_${prefix}"
+candidates_dir="candidates"
 
 mkdir -p "$candidates_dir"
 
