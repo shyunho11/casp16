@@ -18,14 +18,20 @@ for index, row in new_targets.iterrows():
         
         if get_target_by_id(phase0_target_id) is None:
             print(f'Running Phase 1 for {target_id}')
-            save_target_files(target_id, stoichiom)
-            os.chmod(f'/home/casp16/run/TS.human/{target_id}', 0o775)
+            try:
+                save_target_files(target_id, stoichiom)
+                os.chmod(f'/home/casp16/run/TS.human/{target_id}', 0o775)
+            except Exception as e:
+                print(f'Phase 1 for {target_id} failed due to an error: {e}')
             
         else:
             print(f'Skipping {target_id} since Phase 0 target {phase0_target_id} already exists.')
     
     else:
         print(f'Running Phase 0 for {target_id}')
-        save_target_files(target_id, stoichiom)
-        os.chmod(f'/home/casp16/run/TS.human/{target_id}', 0o775)
+        try:
+            save_target_files(target_id, stoichiom)
+            os.chmod(f'/home/casp16/run/TS.human/{target_id}', 0o775)
+        except Exception as e:
+            print(f'Phase 0 for {target_id} failed due to an error: {e}')
         

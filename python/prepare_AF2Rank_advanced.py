@@ -14,9 +14,9 @@ def write_json(data, filename):
         json.dump(data, file, indent=4)
         
 # read iptm and ptm
-def rerank_by_custom_score_multimer(iptm_file, ptm_file):
-    data_iptm = read_json(iptm_file)
-    data_ptm = read_json(ptm_file)
+def rerank_by_custom_score_multimer(json_dir, iptm_file, ptm_file):
+    data_iptm = read_json(os.path.join(json_dir, iptm_file))
+    data_ptm = read_json(os.path.join(json_dir, ptm_file))
 
     # calculate new custom score and store it
     custom_scores = {
@@ -28,10 +28,10 @@ def rerank_by_custom_score_multimer(iptm_file, ptm_file):
     sorted_custom_scores = {k: v for k, v in sorted(custom_scores.items(), key=lambda item: item[1], reverse=True)}
     
     result = {"custom_scores": sorted_custom_scores, "order": list(sorted_custom_scores.keys())}
-    write_json(result, 'ranking_custom.json')
+    write_json(result, os.path.join(json_dir, 'ranking_custom.json'))
     
-def rerank_by_custom_score_monomer(ptm_file):
-    data_ptm = read_json(ptm_file)
+def rerank_by_custom_score_monomer(json_dir, ptm_file):
+    data_ptm = read_json(os.path.join(json_dir, ptm_file))
     
     # use pTM as score
     custom_scores = data_ptm['ptm']
@@ -40,7 +40,7 @@ def rerank_by_custom_score_monomer(ptm_file):
     sorted_custom_scores = {k: v for k, v in sorted(custom_scores.items(), key=lambda item: item[1], reverse=True)}
     
     result = {"custom_scores": sorted_custom_scores, "order": list(sorted_custom_scores.keys())}
-    write_json(result, 'ranking_custom.json')
+    write_json(result, os.path.join(json_dir, 'ranking_custom.json'))
     
 def integrate_and_filter_scores(base_dir, score_cutoff, num_cutoff):
     all_scores = []
@@ -51,17 +51,26 @@ def integrate_and_filter_scores(base_dir, score_cutoff, num_cutoff):
             all_scores.extend((model, score, subdir) for model, score in data['custom_scores'].items())
             
     sorted_scores = sorted(all_scores, key=lambda x: x[1], reverse=True)
-    print(f'total_len : {len(sorted_scores)}')
+    total_len = len(sorted_scores)
+    print(f'total_len : {total_len}')
     
     highest_score = sorted_scores[0][1] * score_cutoff
     filtered_scores = [(model, score, subdir) for model, score, subdir in sorted_scores if score >= highest_score]
-    
-    print(f'score_thresh_filtered_len : {len(filtered_scores)}')
+    filtered_1st_len = len(filtered_scores)
+    print(f'score_thresh_filtered_len : {filtered_1st_len}')
     
     N_select = min(int(len(sorted_scores) * num_cutoff), len(filtered_scores))
     filtered_scores = filtered_scores[:N_select]
+    filtered_2nd_len = len(filtered_scores)
+    print(f'num_thresh_filtered_len : {filtered_2nd_len}')
     
-    print(f'num_thresh_filtered_len : {len(filtered_scores)}')
+    # write README
+    with open(os.path.join(base_dir, 'README.txt'), 'a') as f:
+        f.write(f'Detected {total_len:4d} MassiveFold models\n')
+        f.write(f'Excluded {total_len - filtered_1st_len:4d} models (w/ score cutoff {score_cutoff})\n')
+        f.write(f'Excluded {filtered_1st_len - filtered_2nd_len:4d} models (w/ ratio cutoff {num_cutoff})\n')
+        f.write(f'Retained {filtered_2nd_len:4d} models out of {total_len} MassiveFold models\n')
+        
     return filtered_scores
 
 def save_filtered_results(base_dir, filtered_results):
@@ -122,12 +131,20 @@ def main(args):
     for subdir in [os.path.join(data_dir, subdir) for subdir in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, subdir))]:
         if 'ranking_ptm.json' in os.listdir(subdir):
             if state == 'multimer':
-                rerank_by_custom_score_multimer(os.path.join(subdir, 'ranking_iptm.json'), os.path.join(subdir, 'ranking_ptm.json'))
+                rerank_by_custom_score_multimer(subdir, 'ranking_iptm.json', 'ranking_ptm.json')
             elif state == 'monomer':
-                rerank_by_custom_score_monomer(os.path.join(subdir, 'ranking_ptm.json'))
+                rerank_by_custom_score_monomer(subdir, 'ranking_ptm.json')
             else:
                 raise ValueError("--state option should be one of these: monomer, multimer")
                 
+    # write README
+    with open(os.path.join(base_dir, 'README.txt'), 'w') as f:
+        target_id = os.path.basename(base_dir)
+        f.write('******************** Preparing AF2Rank ********************\n')
+        f.write(f'{target_id} is a {state}\n')
+        f.write(f'Using {"0.8×ipTM + 0.2×pTM" if state == "multimer" else "pTM"} as the custom score for {target_id}\n')
+        f.write('-' * 40 + '\n')
+        
     filtered_results = integrate_and_filter_scores(base_dir, score_cutoff, num_cutoff)
     save_filtered_results(data_dir, filtered_results)
     
@@ -146,6 +163,7 @@ def main(args):
     for filename in os.listdir(filtered_pdb_dir):
         if not filename.startswith('CHAIN_REVISED_'):
             os.remove(os.path.join(filtered_pdb_dir, filename))
+            
             
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
