@@ -15,7 +15,6 @@ __pycache__/
 # Colab output files
 *.bibtex
 *.json
-*.txt
 *.a3m
 *.png
 *.pdb
