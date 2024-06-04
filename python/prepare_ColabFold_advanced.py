@@ -197,7 +197,7 @@ def main(args):
     n_unique = len(selected_struct)
     
     if n_unique < 10: # in case we don't have 10 structures
-        print(f'\n\nSince we have only {n_unique} unique models, adding 10 models based on AF2Rank score')
+        print(f'\n\nSince we have only {n_unique} models, adding 10 models based on AF2Rank score')
         
         AF_top10_dict = process_score_file(AF_score_file, input_pdb_dir, state)
         for top10_pdb in AF_top10_dict.keys():
