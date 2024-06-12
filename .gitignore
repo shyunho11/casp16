@@ -31,9 +31,9 @@ __pycache__/
 *.7z
 
 # Private directory
+af2hack
 af2rank
 extra
-hhsuite_dbs
 
 # Distribution / packaging
 .Python
