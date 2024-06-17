@@ -15,6 +15,6 @@ fi
 source ~/.bashrc
 conda activate colabfold
 
-mkdir -p res_quick
+mkdir -p result_quick
 
-colabfold_batch $1 res_quick --model-type alphafold2_multimer_v3 --recycle-early-stop-tolerance 0.7 --num-recycle 40
+colabfold_batch $1 result_quick --model-type alphafold2_multimer_v3 --recycle-early-stop-tolerance 0.7 --num-recycle 40

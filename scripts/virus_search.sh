@@ -4,7 +4,7 @@
 #SBATCH --mem=320gb
 #SBATCH -w node02
 #SBATCH -c 64
-#SBATCH -o log_hhblits_%A.log
+#SBATCH -o log_virusMSA_%A.log
 
 # resources
 CPU=64

@@ -120,10 +120,8 @@ def save_target_files(target_id, stoichiometry='A1'):
     
     sequences = get_target_sequence(target_id)
     
-    if stoichiometry == 'A1':
-        save_target(target_id, sequences, stoichiometry)
-    elif stoichiometry == 'UNK':
-        save_subunits(target_id, sequences)
+    if stoichiometry == 'UNK':
+        save_subunits(target_id, sequences) # no need to make ColabFold input FASTA file.
     else:
         save_subunits(target_id, sequences)
         save_target(target_id, sequences, stoichiometry)

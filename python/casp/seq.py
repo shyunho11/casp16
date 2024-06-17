@@ -4,7 +4,7 @@ from Bio.Seq import Seq
 def color_highlight(text, color_code):
     return f"\033[{color_code}m{text}\033[0m"
 
-def align2(seq1, seq2):
+def show_alignment(seq1, seq2, width=50):
     alignments = pairwise2.align.globalxx(Seq(seq1), Seq(seq2), one_alignment_only=True)
     
     # Taking the first alignment (if available)
@@ -26,7 +26,7 @@ def align2(seq1, seq2):
                 a1_part += a1[i]
                 a2_part += a2[i]
                 
-            if (i + 1) % 50 == 0:
+            if (i + 1) % width == 0:
                 highlighted_a1.append(a1_part)
                 highlighted_a2.append(a2_part)
                 a1_part = ""
@@ -36,6 +36,10 @@ def align2(seq1, seq2):
         highlighted_a2.append(a2_part)
         
         for i in range(len(highlighted_a1)):
+            if i == len(highlighted_a1) - 1:
+                print(highlighted_a1[i], '<- Sequence 1')
+                print(highlighted_a2[i], '<- Sequence 2')
+                break
             print(highlighted_a1[i])
             print(highlighted_a2[i])
             print()
@@ -45,6 +49,8 @@ def align2(seq1, seq2):
         
         
 if __name__ == "__main__":
-    target = "ETGCNKALCASDVSKCLIQELCQCRPGEGNCSCCKECMLCLGALWDECCDCVGMCNPRNYSDTPPTSKSTVEELHEPIPSLFRALTEGDTQLNWNIVSFPVAEELSHHENLVSFLETVNQPHHQNVSVPSNNVHAPYSSDKEHMCTVVYFDDCMSIHQCKISCESMGASKYRWFHNACCECIGPECIDYGSKTVKCMNCMFGTKHHHHHH"
-    query = "MNSHHVVLTLASLMFLMCLPVSQSCNKALCASDVSKCLIQELCQCRPGEGNCPCCKECMLCLGALWDECCDCVGMCNPRNYSDTPPTSKSTVEELHEPIPSLFRALTEGDTQLNWNIVSFPVAEELTHHENLVSFLETVNQPHHQNVSVPSNNVHAPFPSDKEHMCTVVYFDDCMSIHQCKISCESMGASKYRWFHNACCECVGPECIDYGSKTVKCMNCMF"
-    a = align2(target, query)
+    print('■■■■■■■■■■■■■■■■■■■■ Sequence Alignment Tool ■■■■■■■■■■■■■■■■■■■■')
+    target = input('Sequence 1: ')
+    query = input('Sequence 2: ')
+    print('■■■■■■■■■■■■■■■■■■■■■■■■■■■■ Result! ■■■■■■■■■■■■■■■■■■■■■■■■■■■■')
+    show_alignment(target, query)

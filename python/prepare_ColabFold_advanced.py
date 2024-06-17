@@ -5,7 +5,7 @@ import argparse
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 
-# ANSI color codes
+# ASCII color codes
 RED = "\033[91m"
 RESET = "\033[0m"
 
@@ -32,8 +32,8 @@ def calculate_tm_score(pdb1, pdb2):
     chains1 = count_chains(pdb1)
     chains2 = count_chains(pdb2)
     
-    # add -ter 0 -c option to TMscore if monomer
-    command = ['TMscore', pdb1, pdb2] if chains1 == 1 and chains2 == 1 else ['TMscore', '-ter 0', '-c', pdb1, pdb2]
+    # add -ter 0 -c option to TMscore if multimer
+    command = ['TMscore', pdb1, pdb2] if chains1 == 1 and chains2 == 1 else ['TMscore', pdb1, pdb2, '-ter', '0', '-c']
     result = subprocess.run(command, capture_output=True, text=True)
     
     # extract TM-score
@@ -41,7 +41,7 @@ def calculate_tm_score(pdb1, pdb2):
         if "TM-score    =" in line:
             return float(line.strip().split('=')[1].split()[0])
         
-    return 0.0
+    return 1.0
 
 def find_farthest_structure(reference, structures):
     # parallelize TMscore calculation
@@ -77,7 +77,7 @@ def reorder_structures(structure_files):
     remaining_structures.remove(second_structure)
     
     # find 3rd, 4th, 5th structure
-    for i in range(3):
+    for i in range(8):
         if len(remaining_structures) == 1:
             selected.append(remaining_structures[0])
             break
@@ -139,7 +139,7 @@ def process_score_file(score_file, input_pdb_dir, state, threshold=None):
                     break
                     
     if len(unique_dict) <= 1:
-        print(f'Warning: Failed to find a unique model.')
+        print(f'Warning: Failed to find additional unique models.')
         
     return unique_dict
 
@@ -197,7 +197,7 @@ def main(args):
     n_unique = len(selected_struct)
     
     if n_unique < 10: # in case we don't have 10 structures
-        print(f'\n\nSince we have only {n_unique} models, adding 10 models based on AF2Rank score')
+        print(f'\n\nSince we have only {n_unique} models, we will add 10 models based on AF2Rank score')
         
         AF_top10_dict = process_score_file(AF_score_file, input_pdb_dir, state)
         for top10_pdb in AF_top10_dict.keys():

@@ -22,12 +22,17 @@ python /home/iu/casp16/python/prepare_Phase2.py "$1"
 
 PHASE1_TARGET_ID="${TARGET_ID:0:1}1${TARGET_ID:2}"
 
-# Set the variables
-URL="https://casp-capri.sinbios.plbs.fr/index.php/s/TTqScLKZM5W6ZFi/download?path=%2F&files=${PHASE1_TARGET_ID}_MassiveFold.tar.gz"
 TARGET_DIR="/home/casp16/run/TS.human/${TARGET_ID}"
 TAR_FILE="${TARGET_DIR}/${PHASE1_TARGET_ID}_MassiveFold.tar.gz"
 
 mkdir -p "${TARGET_DIR}"
+chmod 775 "${TARGET_DIR}"
+
+# Set the variables
+CSV_URL="https://casp-capri.sinbios.plbs.fr/index.php/s/TTqScLKZM5W6ZFi/download?path=%2F&files=CASP_MF_links.csv"
+CSV_FILE="CASP_MF_links.csv"
+URL=$(awk -F, -v target="$PHASE1_TARGET_ID" '$1 == target {print $2}' $CSV_FILE)
+rm $CSV_FILE
 
 wget -O "${TAR_FILE}" "${URL}"
 if [ $? -ne 0 ]; then

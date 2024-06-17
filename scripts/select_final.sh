@@ -2,7 +2,7 @@
 #SBATCH -p gpu
 #SBATCH --gres=gpu:A6000:1
 #SBATCH -J AF2Rank
-#SBATCH --mem=32g
+#SBATCH --mem=46g
 #SBATCH -c 4
 #SBATCH -o log_af2rank_%A.log
 
@@ -42,7 +42,13 @@ python -u /home/iu/casp16/python/parse_af2rank_log.py $log_file
 
 mkdir -p final_unrelaxed
 
-top_files=$(awk -F',' 'NR > 1 {print $1}' "RANK_BY_COMPOSITE.csv" | head -n 5)
+if [ $2 -ge 2 ]; then
+    rank_file="RANK_BY_CUSTOM_SCORE.csv"
+else
+    rank_file="RANK_BY_COMPOSITE.csv"
+fi
+
+top_files=$(awk -F',' 'NR > 1 {print $1}' "$rank_file" | head -n 5)
 
 counter=1
 for file in $top_files; do

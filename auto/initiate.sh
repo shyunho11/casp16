@@ -8,4 +8,4 @@
 
 source /home/iu/.bashrc
 
-python -u /home/iu/casp16/python/casp_auto_run.py
+python -u /home/iu/casp16/python/initiate_casp_auto.py

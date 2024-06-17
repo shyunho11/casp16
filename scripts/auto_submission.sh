@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -z "$1" ]; then
-  echo "Usage: $0 <final model path>"
+  echo "Usage: $0 <final model path> [--check]"
   exit 1
 fi
 
@@ -16,6 +16,12 @@ target_id=$(basename "$(dirname "$current_directory")")
 echo "Target ID: $target_id"
 echo "Group Name: $group_name"
 echo ""
+
+if [ "$2" == "--check" ]; then
+    echo "Checking submission status..."
+    python /home/casp16/casp16_server/bin/check_submit_status.py $target_id ${group_name}
+    exit 0
+fi
 
 for i in {1..5}
 do

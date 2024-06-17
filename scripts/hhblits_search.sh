@@ -16,8 +16,9 @@ if [ -z "$1" ]; then
 fi
 
 source ~/.bashrc
-mkdir -p a3m
 mkdir -p subunits
+mkdir -p raw_a3m
+mkdir -p a3m
 
 # input
 input_fasta=$1
@@ -34,8 +35,10 @@ for subunit_fasta in subunits/*.fasta; do
     input_name=$(basename "$subunit_fasta" .fasta)
     
     # Run HHblits on UniRef30 DB
-    hhblits -i $subunit_fasta -d $uniref -oa3m "a3m/${input_name}_uniref30.a3m" -n 8 -mact 0.35 -maxfilt 100000000 -neffmax 20 -cov 25 -cpu $CPU -nodiff -realign_max 100000000 -maxseq 1000000 -maxmem $MEM
+    hhblits -i $subunit_fasta -d $uniref -oa3m "raw_a3m/${input_name}_uniref30.a3m" -n 8 -mact 0.35 -maxfilt 100000000 -neffmax 20 -cov 25 -cpu $CPU -nodiff -realign_max 100000000 -maxseq 1000000 -maxmem $MEM -e 1e-3
+    hhfilter -i "raw_a3m/${input_name}_uniref30.a3m" -o "a3m/${input_name}_uniref30.a3m" -id 95 -cov 50
 
     # Run HHblits on BFD with UniRef30 MSA
-    hhblits -i "a3m/${input_name}_uniref30.a3m" -d $bfd -oa3m "a3m/${input_name}_bfd.a3m" -n 8 -mact 0.35 -maxfilt 100000000 -neffmax 20 -cov 25 -cpu $CPU -nodiff -realign_max 100000000 -maxseq 1000000 -maxmem $MEM
+    hhblits -i "raw_a3m/${input_name}_uniref30.a3m" -d $bfd -oa3m "raw_a3m/${input_name}_bfd.a3m" -n 8 -mact 0.35 -maxfilt 100000000 -neffmax 20 -cov 25 -cpu $CPU -nodiff -realign_max 100000000 -maxseq 1000000 -maxmem $MEM -e 1e-3
+    hhfilter -i "raw_a3m/${input_name}_bfd.a3m" -o "a3m/${input_name}_bfd.a3m" -id 95 -cov 50
 done

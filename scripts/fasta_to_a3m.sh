@@ -1,4 +1,15 @@
 #!/bin/bash
+#SBATCH -p cpu
+#SBATCH -J CustomMSA
+#SBATCH --mem=320gb
+#SBATCH -w node02
+#SBATCH -c 64
+#SBATCH -o log_customMSA_%A.log
+
+# resources
+CPU=64
+
+set -e
 
 if [ "$#" -ne 3 ]; then
     echo "Usage: $0 <query FASTA file> <custom DB FASTA file> <output A3M file>"

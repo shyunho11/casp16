@@ -16,7 +16,8 @@ process_directory() {
 
     # Step 2: Calculate pLDDT * pTM * ipTM (if exists), then sort and take top 5
     echo "$data" | grep 'rank_' | awk '{ 
-        rank = $1
+        match($0, /(rank_[0-9]{3})/, arr)
+        rank = arr[1]
         model_name = $3
         match($4, /=([0-9.]+)/, arr)
         pLDDT = arr[1]
@@ -82,12 +83,13 @@ for i in "${sorted[@]}"; do
     echo "$i" >> "$candidates_dir/top_final_models.txt"
 done
 
-# Step 3: Copy only the top 5 files, using a counter to stop when exceeding 5
+# Step 3: Copy only the top 50 files, using a counter to stop when exceeding 50
 counter=1
 while IFS=" " read -r score filename; do
     if [ $counter -le 50 ]; then
-        cp "$candidates_dir/$filename" "$final_candidates_dir"
-        echo "Final model ${counter} : $filename"
+        final_filename="candidate_$(printf "%03d" $counter)_${filename#candidate_}"
+        cp "$candidates_dir/$filename" "$final_candidates_dir/$final_filename"
+        echo "Final model ${counter} : $final_filename"
         ((counter++))
     else
         break

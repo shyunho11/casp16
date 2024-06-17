@@ -60,7 +60,7 @@ BASE_DIR="/home/casp16/run/TS.human/${TARGET}"
 NODE="gpu"
 NODE_CPU="cpu"
 CPU="4"
-MEM="32"
+MEM="46"
 DATA_DIR="/home/fullmoon/software/af2rank/"
 RUN_SCRIPT_DIR="/home/casp16/run/TS.human/T2201/utils/"
 
@@ -170,7 +170,7 @@ job_prev=$(submit -p $NODE_CPU -c $CPU --mem=${MEM}g -w node01 \
     --chdir="${BASE_DIR}/Massivefold.colabfold" \
     --wrap="source ~/.bashrc; conda activate base; \
             echo \\"Preparing Emin\\"; \
-            python $RUN_SCRIPT_DIR/prepare_Emin.py --base_dir $BASE_DIR --state $MER")
+            python /home/iu/casp16/python/prepare_Emin_advanced.py --base_dir $BASE_DIR --state $MER")
 
 ############################################################
 # 7. Energy minimization
@@ -200,7 +200,7 @@ job_prev=$(submit -p $NODE_CPU -c $CPU --mem=${MEM}g -w node01 \
             python $RUN_SCRIPT_DIR/prepare_submit.py --base_dir $BASE_DIR")
 
 ############################################################
-# 8. Match format for CASP16
+# 9. Match format for CASP16
 ############################################################
 
 job_prev=$(submit -p $NODE_CPU -c $CPU --mem=${MEM}g -w node01 \
