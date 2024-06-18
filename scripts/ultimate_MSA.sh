@@ -9,12 +9,13 @@
 # resources
 CPU=64
 
-set -e
-
 if [ "$#" -ne 3 ]; then
     echo "Usage: $0 <A3M file path> <FASTA file path> <query FASTA file>"
     exit 1
 fi
+
+set -e
+source ~/.bashrc
 
 # input
 a3m_path=$1
@@ -31,7 +32,7 @@ done
 cat "${fasta_path}/"*.fasta > pre_ultimate.fasta
 sed '/>/! s/-//g' pre_ultimate.fasta | tr '[:lower:]' '[:upper:]' > ultimate.fasta # remove gaps & force uppercase
 
-mkdir mmseqs
+mkdir -p mmseqs
 
 # cluster and extract representative sequences to make ultimate DB
 mmseqs createdb ultimate.fasta mmseqs/ultimate_db

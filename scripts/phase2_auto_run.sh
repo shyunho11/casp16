@@ -28,9 +28,12 @@ TAR_FILE="${TARGET_DIR}/${PHASE1_TARGET_ID}_MassiveFold.tar.gz"
 mkdir -p "${TARGET_DIR}"
 chmod 775 "${TARGET_DIR}"
 
-# Set the variables
+# Get MassiveFold data link from csv file
 CSV_URL="https://casp-capri.sinbios.plbs.fr/index.php/s/TTqScLKZM5W6ZFi/download?path=%2F&files=CASP_MF_links.csv"
-CSV_FILE="CASP_MF_links.csv"
+CSV_FILE="${TARGET_DIR}/CASP_MF_links.csv"
+wget -O "${CSV_FILE}" "${CSV_URL}"
+
+# Make URL for MassiveFold data download
 URL=$(awk -F, -v target="$PHASE1_TARGET_ID" '$1 == target {print $2}' $CSV_FILE)
 rm $CSV_FILE
 

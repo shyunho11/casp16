@@ -19,6 +19,8 @@ export PATH=/opt/ohpc/pub/apps/anaconda3/bin/python:/opt/ohpc/pub/apps/anaconda3
 TARGET_ID=$1
 TARGET_DIR="/home/casp16/run/TS.human/$TARGET_ID"
 
+echo "Running Phase 1[0] for $1"
+
 if [ ! -d "$TARGET_DIR" ]; then
     echo "Directory does not exist: $TARGET_DIR"
     exit 1
@@ -46,7 +48,7 @@ if [ "$STOICHIOMETRY" == "A1" ]; then
            -c 8 \
            --mem=46g \
            --gres=gpu:A5000:1 \
-           -J "${TARGET_ID}_UltimateMSA" \
+           -J "${TARGET_ID}_UltMSA-Colab" \
            -o "${TARGET_DIR}/BLAST/log_auto_colab_%A.log" \
            --chdir="${TARGET_DIR}/BLAST" \
            --wrap="set -e; \

@@ -4,7 +4,7 @@
 #SBATCH -c 8
 #SBATCH --mem=48g
 #SBATCH --gres=gpu:A5000:1
-#SBATCH -o log_colab_template_%A.log
+#SBATCH -o log_colab_%A.log
 
 
 if [ "$#" -ne 3 ]; then
@@ -15,6 +15,8 @@ fi
 source ~/.bashrc
 conda activate colabfold
 
+echo "Running ColabFold in ${2}_v3 with templates in $(realpath $2)"
 colabfold_batch $1 "${3}_v3" --templates --custom-template-path $2 --num-seeds 10 --model-type alphafold2_multimer_v3
-colabfold_batch $1 "${3}_v2" --templates --custom-template-path $2 --num-seeds 10 --model-type alphafold2_multimer_v2
 
+echo "Running ColabFold in ${2}_v2 with templates in $(realpath $2)"
+colabfold_batch $1 "${3}_v2" --templates --custom-template-path $2 --num-seeds 10 --model-type alphafold2_multimer_v2

@@ -15,7 +15,9 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+set -e
 source ~/.bashrc
+
 mkdir -p subunits
 mkdir -p raw_a3m
 mkdir -p a3m

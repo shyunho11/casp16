@@ -4,7 +4,7 @@
 #SBATCH -c 8
 #SBATCH --mem=48g
 #SBATCH --gres=gpu:A5000:1
-#SBATCH -o log_colab_unpaired_%A.log
+#SBATCH -o log_colab_%A.log
 
 
 if [ "$#" -ne 2 ]; then
@@ -15,6 +15,8 @@ fi
 source ~/.bashrc
 conda activate colabfold
 
+echo "Running ColabFold in ${2}_v3 with unpaired MSA"
 colabfold_batch $1 "${2}_v3" --pair-mode unpaired --num-seeds 5 --model-type alphafold2_multimer_v3
-colabfold_batch $1 "${2}_v2" --pair-mode unpaired --num-seeds 5 --model-type alphafold2_multimer_v2
 
+echo "Running ColabFold in ${2}_v2 with unpaired MSA"
+colabfold_batch $1 "${2}_v2" --pair-mode unpaired --num-seeds 5 --model-type alphafold2_multimer_v2

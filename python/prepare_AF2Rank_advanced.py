@@ -172,7 +172,7 @@ if __name__ == "__main__":
     argparser.add_argument("--chain_list", type=str, help="chain list of decoys (e.g. A,B,C,D)")
     argparser.add_argument("--state", type=str, help="monomer or multimer")
     argparser.add_argument("--score_cutoff", type=float, default=0.8, help="A model will be discarded if its score is lower than TOP 1 score * this cutoff")
-    argparser.add_argument("--num_cutoff", type=float, default=0.2, help="The ratio of AF2Rank candidates to all models will be less than this cutoff")
+    argparser.add_argument("--num_cutoff", type=float, default=0.05, help="The ratio of AF2Rank candidates to all models will be less than this cutoff")
     args = argparser.parse_args()
     main(args)
     

@@ -5,12 +5,16 @@
 #SBATCH --mem=320g
 #SBATCH -o log_blast_%A.log
 
+# resources
 CPU=64
 
 if [ -z "$1" ]; then
     echo "Usage: $0 <subunits FASTA directory>"
     exit 1
 fi
+
+set -e
+source ~/.bashrc
 
 fasta_dir=$1
 out_dir="blastp"
