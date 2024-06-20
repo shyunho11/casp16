@@ -8,7 +8,7 @@
 # MODEL INFO
 ## model_1
 ### METHOD
-    ColabFold with Ultimate MSA (symmetry: Yes)
+    ColabFold with Ultimate MSA
 ### STOICHIOMETRY
     A2
 ### COLABFOLD SETTING
