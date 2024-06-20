@@ -8,28 +8,24 @@
 # MODEL INFO
 ## model_1
 ### METHOD
-    ColabFold with HHblits-BFD MSA
-### STOICHIOMETRY
-    A3
+    ColabFold with NCBI-Virus MSA (Extended recycles)
 ### COLABFOLD SETTING
 ```python
---num-seeds 10 --recycle-early-stop-tolerance 0.3 --num-recycle 10
+--num-seeds 2 --recycle-early-stop-tolerance 0.3 --num-recycle 40
 ```
 ### RANKING
 ```python
-AF2Rank
+Human intuition
 ```
 <br/>
 <br/>
 
 ## model_2
 ### METHOD
-    ColabFold with UltimaeMSA
-### STOICHIOMETRY
-    A2
+    ColabFold with NCBI-Virus MSA (Extended recycles)
 ### COLABFOLD SETTING
 ```python
---num-seeds 10 --recycle-early-stop-tolerance 0.3 --num-recycle 10
+--num-seeds 2 --recycle-early-stop-tolerance 0.3 --num-recycle 40
 ```
 ### RANKING
 ```python
@@ -40,16 +36,14 @@ AF2Rank
 
 ## model_3
 ### METHOD
-    ColabFold with HHblits-BFD MSA
-### STOICHIOMETRY
-    A4
+    ColabFold with NCBI-Virus MSA
 ### COLABFOLD SETTING
 ```python
---num-seeds 10 --recycle-early-stop-tolerance 0.3 --num-recycle 10
+--num-seeds 4 --recycle-early-stop-tolerance 0.3 --num-recycle 10
 ```
 ### RANKING
 ```python
-AF2Rank
+pLDDT * pTM * ipTM
 ```
 <br/>
 <br/>
@@ -57,8 +51,6 @@ AF2Rank
 ## model_4
 ### METHOD
     MiniWorld by PSK
-### STOICHIOMETRY
-    A1
 ### RANKING
 ```python
 AF2Rank
@@ -69,8 +61,6 @@ AF2Rank
 ## model_5
 ### METHOD
     MiniWorld by PSK
-### STOICHIOMETRY
-    A1
 ### RANKING
 ```python
 AF2Rank
