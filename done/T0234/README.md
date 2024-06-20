@@ -24,7 +24,7 @@ AF2Rank
 
 ## model_2
 ### METHOD
-    ColabFold with UltimaeMSA
+    ColabFold with UltimateMSA
 ### STOICHIOMETRY
     A2
 ### COLABFOLD SETTING
