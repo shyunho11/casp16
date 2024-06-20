@@ -10,14 +10,14 @@
 ### METHOD
     ColabFold with Ultimate MSA
 ### STOICHIOMETRY
-    A2
+    A3B6
 ### COLABFOLD SETTING
 ```python
---num-seeds 20 --model-type alphafold2_multimer_v3
+--num-seeds 5 --model-type alphafold2_multimer_v3
 ```
 ### RANKING
 ```python
-AF2Rank considering symmetry (This model ranked 3rd in the AF2Rank results)
+AF2Rank (This model ranked 1st in the AF2Rank results for A3B6)
 ```
 <br/>
 <br/>
@@ -26,14 +26,14 @@ AF2Rank considering symmetry (This model ranked 3rd in the AF2Rank results)
 ### METHOD
     ColabFold with Ultimate MSA
 ### STOICHIOMETRY
-    A2
+    A3B5
 ### COLABFOLD SETTING
 ```python
---num-seeds 20 --model-type alphafold2_multimer_v3
+--num-seeds 5 --model-type alphafold2_multimer_v3
 ```
 ### RANKING
 ```python
-AF2Rank without considering symmetry (This model ranked 1st in the AF2Rank results)
+ColabFold 'multimer' metric (This model is the rank_001 ColalFold model for A3B5)
 ```
 <br/>
 <br/>
@@ -42,39 +42,46 @@ AF2Rank without considering symmetry (This model ranked 1st in the AF2Rank resul
 ### METHOD
     ColabFold with Ultimate MSA
 ### STOICHIOMETRY
-    A2
+    A3B6
 ### COLABFOLD SETTING
 ```python
---num-seeds 20 --model-type alphafold2_multimer_v3
+--num-seeds 5 --model-type alphafold2_multimer_v3
 ```
 ### RANKING
 ```python
-AF2Rank without considering symmetry (This model ranked 2nd in the AF2Rank results)
+AF2Rank (This model ranked 2nd in the AF2Rank results for A3B6)
 ```
 <br/>
 <br/>
 
 ## model_4
 ### METHOD
-    MiniWorld by PSK
+    ColabFold with Ultimate MSA
 ### STOICHIOMETRY
-    A2
+    A3B5
+### COLABFOLD SETTING
+```python
+--num-seeds 5 --model-type alphafold2_multimer_v3
+```
 ### RANKING
 ```python
-AF2Rank
+ColabFold 'multimer' metric (This model is the rank_002 ColalFold model for A3B5)
 ```
 <br/>
 <br/>
 
 ## model_5
 ### METHOD
-    MiniWorld by PSK
+    ColabFold with Ultimate MSA
 ### STOICHIOMETRY
-    A2
+    A3B6
+### COLABFOLD SETTING
+```python
+--num-seeds 5 --model-type alphafold2_multimer_v3
+```
 ### RANKING
 ```python
-AF2Rank
+AF2Rank (This model ranked 2nd in the AF2Rank results for A3B6)
 ```
 <br/>
 <br/>
-    

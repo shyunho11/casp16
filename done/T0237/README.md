@@ -13,11 +13,11 @@
     A2
 ### COLABFOLD SETTING
 ```python
---num-seeds 20 --model-type alphafold2_multimer_v3
+--num-seeds 5 --model-type alphafold2_multimer_v3
 ```
 ### RANKING
 ```python
-AF2Rank considering symmetry (This model ranked 3rd in the AF2Rank results)
+AF2Rank (This model ranked 1st in the AF2Rank results for A2)
 ```
 <br/>
 <br/>
@@ -26,14 +26,14 @@ AF2Rank considering symmetry (This model ranked 3rd in the AF2Rank results)
 ### METHOD
     ColabFold with Ultimate MSA
 ### STOICHIOMETRY
-    A2
+    A4
 ### COLABFOLD SETTING
 ```python
---num-seeds 20 --model-type alphafold2_multimer_v3
+--num-seeds 5 --model-type alphafold2_multimer_v3
 ```
 ### RANKING
 ```python
-AF2Rank without considering symmetry (This model ranked 1st in the AF2Rank results)
+AF2Rank (This model ranked 1st in the AF2Rank results for A4)
 ```
 <br/>
 <br/>
@@ -45,11 +45,11 @@ AF2Rank without considering symmetry (This model ranked 1st in the AF2Rank resul
     A2
 ### COLABFOLD SETTING
 ```python
---num-seeds 20 --model-type alphafold2_multimer_v3
+--num-seeds 5 --model-type alphafold2_multimer_v3
 ```
 ### RANKING
 ```python
-AF2Rank without considering symmetry (This model ranked 2nd in the AF2Rank results)
+AF2Rank (This model ranked 2nd in the AF2Rank results for A2)
 ```
 <br/>
 <br/>
