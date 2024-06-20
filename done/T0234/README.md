@@ -10,10 +10,10 @@
 ### METHOD
     ColabFold with HHblits-BFD MSA
 ### STOICHIOMETRY
-    A6
+    A3
 ### COLABFOLD SETTING
 ```python
---num-seeds 30 --recycle-early-stop-tolerance 0.3 --num-recycle 10
+--num-seeds 10 --recycle-early-stop-tolerance 0.3 --num-recycle 10
 ```
 ### RANKING
 ```python
@@ -26,10 +26,10 @@ AF2Rank
 ### METHOD
     ColabFold with HHblits-BFD MSA
 ### STOICHIOMETRY
-    A5
+    A2
 ### COLABFOLD SETTING
 ```python
---num-seeds 30 --recycle-early-stop-tolerance 0.3 --num-recycle 10
+--num-seeds 10 --recycle-early-stop-tolerance 0.3 --num-recycle 10
 ```
 ### RANKING
 ```python
@@ -40,12 +40,12 @@ AF2Rank
 
 ## model_3
 ### METHOD
-    ColabFold with HHblits-BFD MSA
+    ColabFold with UltimateMSA
 ### STOICHIOMETRY
-    A6
+    A4
 ### COLABFOLD SETTING
 ```python
---num-seeds 30 --recycle-early-stop-tolerance 0.3 --num-recycle 10
+--num-seeds 10 --recycle-early-stop-tolerance 0.3 --num-recycle 10
 ```
 ### RANKING
 ```python
@@ -56,13 +56,9 @@ AF2Rank
 
 ## model_4
 ### METHOD
-    ColabFold with HHblits-BFD MSA
+    MiniWorld by PSK
 ### STOICHIOMETRY
-    A5
-### COLABFOLD SETTING
-```python
---num-seeds 30 --recycle-early-stop-tolerance 0.3 --num-recycle 10
-```
+    A1
 ### RANKING
 ```python
 AF2Rank
@@ -72,16 +68,13 @@ AF2Rank
 
 ## model_5
 ### METHOD
-    ColabFold with HHblits-BFD MSA
+    MiniWorld by PSK
 ### STOICHIOMETRY
-    A6
-### COLABFOLD SETTING
-```python
---num-seeds 30 --recycle-early-stop-tolerance 0.3 --num-recycle 10
-```
+    A1
 ### RANKING
 ```python
 AF2Rank
 ```
 <br/>
 <br/>
+    

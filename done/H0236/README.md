@@ -81,7 +81,7 @@ ColabFold 'multimer' metric (This model is the rank_002 ColalFold model for A3B5
 ```
 ### RANKING
 ```python
-AF2Rank (This model ranked 2nd in the AF2Rank results for A3B6)
+AF2Rank (This model ranked 3rd in the AF2Rank results for A3B6)
 ```
 <br/>
 <br/>
