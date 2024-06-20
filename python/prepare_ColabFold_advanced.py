@@ -143,9 +143,9 @@ def process_score_file(score_file, input_pdb_dir, state, threshold=None):
         
     return unique_dict
 
-def get_templates_for_colabfold(score_file_AF, score_file_MULTIMER, output_path, input_pdb_dir, state):
+def get_templates_for_colabfold(score_file_AF, output_path, input_pdb_dir, state): # score_file_MULTIMER,
     AF_unique_dict = process_score_file(score_file_AF, input_pdb_dir, state, 0.9)
-    MULTI_unique_dict = process_score_file(score_file_MULTIMER, input_pdb_dir, state, 0.9)
+    # MULTI_unique_dict = process_score_file(score_file_MULTIMER, input_pdb_dir, state, 0.9)
     
     merged_dict = {}
     
@@ -153,11 +153,11 @@ def get_templates_for_colabfold(score_file_AF, score_file_MULTIMER, output_path,
         merged_dict[key] = value
         
     # Insert items from the multimer result, keeping the highest score in case of duplicate PDBs
-    for key, value in MULTI_unique_dict.items():
-        if key in merged_dict:
-            merged_dict[key] = max(merged_dict[key], value)
-        else:
-            merged_dict[key] = value
+    # for key, value in MULTI_unique_dict.items():
+        # if key in merged_dict:
+            # merged_dict[key] = max(merged_dict[key], value)
+        # else:
+            # merged_dict[key] = value
             
     sorted_dict = dict(sorted(merged_dict.items(), key=lambda item: item[1], reverse=True)[:10])
     
@@ -174,10 +174,10 @@ def main(args):
     
     if state == 'monomer': # if monomer, select models w composite score
         AF_score_file = os.path.join(base_dir, 'Massivefold.AF2Rank/ver.AF/RANK_BY_COMPOSITE.txt')
-        MULTI_score_file = os.path.join(base_dir, 'Massivefold.AF2Rank/ver.MULTIMER/RANK_BY_COMPOSITE.txt')
+        # MULTI_score_file = os.path.join(base_dir, 'Massivefold.AF2Rank/ver.MULTIMER/RANK_BY_COMPOSITE.txt')
     elif state == 'multimer': # if multimer, select models w custom score (plddt*ptm*iptm)
         AF_score_file = os.path.join(base_dir, 'Massivefold.AF2Rank/ver.AF/RANK_BY_CUSTOM_SCORE.txt')
-        MULTI_score_file = os.path.join(base_dir, 'Massivefold.AF2Rank/ver.MULTIMER/RANK_BY_CUSTOM_SCORE.txt')
+        # MULTI_score_file = os.path.join(base_dir, 'Massivefold.AF2Rank/ver.MULTIMER/RANK_BY_CUSTOM_SCORE.txt')
     else:
         raise ValueError("--state option should be one of these: monomer, multimer")
     
@@ -193,7 +193,7 @@ def main(args):
     MiniWorld_dir = os.path.join(base_dir, 'for_MiniWorld')
     os.makedirs(MiniWorld_dir, exist_ok=True)
         
-    selected_struct = get_templates_for_colabfold(AF_score_file, MULTI_score_file, output_path, input_pdb_dir, state)
+    selected_struct = get_templates_for_colabfold(AF_score_file, output_path, input_pdb_dir, state) # MULTI_score_file,
     n_unique = len(selected_struct)
     
     if n_unique < 10: # in case we don't have 10 structures

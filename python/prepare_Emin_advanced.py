@@ -1,4 +1,5 @@
 import os
+import json
 import glob
 import argparse
 import subprocess
@@ -6,48 +7,40 @@ import shutil
 import numpy as np
 from prepare_ColabFold_advanced import reorder_structures
 
-def filter_and_write_top_models(colab_out_dir, state):
-    pdb_files = glob.glob(os.path.join(colab_out_dir, '*_unrelaxed_rank_*.pdb'))
-    log_file = os.path.join(colab_out_dir, 'log.txt')
+def filter_and_write_top_models(colab_out_dir, state, thresh=0.9):
+    pdb_files = glob.glob(f'{colab_out_dir}/*_unrelaxed_*.pdb')
+    score_files = glob.glob(f'{colab_out_dir}/*_scores_*.json')
     custom_scores = []
     
-    with open(log_file, 'r') as f:
-        lines = f.readlines()
-    
-    for i, line in enumerate(lines):
-        if 'reranking' in line:
-            lines = lines[i+1:]
-            break
+    for score_file in score_files:
+        with open(score_file, 'r') as fp:
+            data = json.load(fp)
+            if state == 'multimer':
+                custom_score = 0.8 * data['iptm'] + 0.2 * data['ptm']
+            elif state == 'monomer':
+                custom_score = 0.01 * np.mean(data['plddt']) * data['ptm']
+            else:
+                raise ValueError("Invalid state info (should be 'monomer' or 'multimer')")
+            custom_scores.append((custom_score, score_file))
             
-    for line in lines:
-        model_info = line.strip().split()
-        model_name = model_info[2]
-        
-        if state == 'multimer':
-            iptm = float(model_info[5].split('=')[1])
-            ptm = float(model_info[4].split('=')[1])
-            custom_score = 0.8 * iptm + 0.2 * ptm
-        elif state == 'monomer':
-            plddt = model_info[3].split('=')[1]
-            plddt = float(model_info[4].split('=')[1])
-            custom_score = 0.01 * np.mean(data['plddt']) * data['ptm']
-        else:
-            raise ValueError("Invalid state info (should be 'monomer' or 'multimer')")
-            
-        custom_scores.append((custom_score, model_name))
-        
     custom_scores.sort(reverse=True)
     
-    score_thresh = custom_scores[0][0] * 0.9
-    filtered_info = [(score, model_name) for score, model_name in custom_scores if score >= score_thresh]
+    score_thresh = custom_scores[0][0] * thresh
+    filtered_info = [(score, score_file) for score, score_file in custom_scores if score >= score_thresh]
+    filtered_n = len(filtered_info)
     
+    if filtered_n < 5:
+        print(f'Since we have only {filtered_n} models, we will add {5 - filtered_n} models ignoring score threshold {thresh}')
+        filtered_info += custom_scores[filtered_n:5]
+        
     new_info_with_pdb = []
     with open(f'{colab_out_dir}/MODEL_RANK_FILTERED.txt', 'w') as rank_file:
         rank_file.write('rank, monomer:(0.01*plddt*ptm)/multimer:(0.8*iptm+0.2*ptm), pdb_path\n')
-        for i, (score, model_name) in enumerate(filtered_info):
+        for i, (score, score_file) in enumerate(filtered_info):
+            model_fn = os.path.basename(score_file)[:-5].split('scores_')[-1]
             for pdb in pdb_files:
-                if model_name in os.path.basename(pdb):
-                    rank_file.write(f'{i + 1}, {model_name}, {pdb}\n')
+                if model_fn in os.path.basename(pdb):
+                    rank_file.write(f'{i + 1}, {score}, {pdb}\n')
                     new_info_with_pdb.append((score, pdb))
                     break
                     
@@ -71,7 +64,7 @@ def select_human_models(filtered_info, permuted_out_dir):
     revised_files = {file: score_lookup_base[file.split('CHAIN_REVISED_')[-1]] for file in os.listdir(permuted_out_dir) if file.startswith('CHAIN_REVISED_')}
     top_struct_with_new_chain = [os.path.join(permuted_out_dir, file) for file, _ in sorted(revised_files.items(), key=lambda item: item[1], reverse=True)]
     
-    selected_structures = reorder_structures(top_struct_with_new_chain)
+    selected_structures = reorder_structures(top_struct_with_new_chain[:5])
     
     return selected_structures
 
@@ -88,7 +81,7 @@ def main(args):
     filtered_info = filter_and_write_top_models(output_path, state)
     selected_structures = select_human_models(filtered_info, permuted_pdb_dir)
     
-    for i, structure_file in enumerate(selected_structures[:5], start=1):
+    for i, structure_file in enumerate(selected_structures, start=1):
         destination_file = os.path.join(models_before_Emin_dir, f'human_model_{i}.pdb')
         shutil.copy(structure_file, destination_file)
         

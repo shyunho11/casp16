@@ -97,18 +97,6 @@ job_prev=$(submit -p $NODE -c $CPU --mem=${MEM}g --gres=gpu:A5000:1 \
             python3 /home/fullmoon/software/af2rank/revised_af2rank_no_native_xTag.py --data_dir ${DATA_DIR} --chain ${CHAIN} --decoy_dir ${BASE_DIR}/Massivefold.AF2Rank/inputs --output_dir ${BASE_DIR}/Massivefold.AF2Rank/ver.AF ; \
             conda deactivate")
 
-# run with AF_MULTIMER version
-job_prev=$(submit -p $NODE -c $CPU --mem=${MEM}g --gres=gpu:A5000:1 \
-    -J "${TARGET}.AF2Rank.MULTIMER" \
-    -o "${BASE_DIR}/Massivefold.AF2Rank/ver.MULTIMER/%x.out" \
-    -e "${BASE_DIR}/Massivefold.AF2Rank/ver.MULTIMER/%x.err" \
-    --chdir="${BASE_DIR}/Massivefold.AF2Rank/ver.MULTIMER" \
-    --wrap="set -e; \
-            source ~/.bashrc; \
-            conda activate af2rank; \
-            python3 /home/fullmoon/software/af2rank/revised_af2rank_no_native_xTag_multimer.py --data_dir ${DATA_DIR} --chain ${CHAIN} --decoy_dir ${BASE_DIR}/Massivefold.AF2Rank/inputs --output_dir ${BASE_DIR}/Massivefold.AF2Rank/ver.MULTIMER ; \
-            conda deactivate")
-
 ############################################################
 # 3. Get rank from AF2Rank outputs
 ############################################################
@@ -121,15 +109,6 @@ job_prev=$(submit -p $NODE_CPU -c $CPU --mem=${MEM}g -w node01 \
     --wrap="source ~/.bashrc; conda activate base; \
             echo \\"Ranking AF2Rank outputs\\"; \
             python $RUN_SCRIPT_DIR/get_rank_from_output.py ${BASE_DIR}/Massivefold.AF2Rank/ver.AF/${TARGET}.AF2Rank.AF.out")
-
-job_prev=$(submit -p $NODE_CPU -c $CPU --mem=${MEM}g -w node01 \
-    -J "${TARGET}.get.rank.MULTIMER" \
-    -o "stdout" \
-    -e "stderr" \
-    --chdir="${BASE_DIR}/Massivefold.AF2Rank/ver.MULTIMER" \
-    --wrap="source ~/.bashrc; conda activate base; \
-            echo \\"Ranking AF2Rank outputs\\"; \
-            python $RUN_SCRIPT_DIR/get_rank_from_output.py ${BASE_DIR}/Massivefold.AF2Rank/ver.MULTIMER/${TARGET}.AF2Rank.MULTIMER.out")
 
 ############################################################
 # 4. Colabfold set-up
@@ -156,7 +135,7 @@ job_prev=$(submit -p $NODE -c $CPU --mem=${MEM}g --gres=gpu:A5000:1 \
     --wrap="set -e; \
             source /home/mink/.bashrc; \
             conda activate colabfold; \
-            colabfold_batch ${FASTA_PATH} --msa-mode single_sequence --num-recycle 20 --recycle-early-stop-tolerance 0.5 --num-seeds 10 --templates --custom-template-path ${BASE_DIR}/Massivefold.colabfold/templates ${BASE_DIR}/Massivefold.colabfold/model ; \
+            colabfold_batch ${FASTA_PATH} --num-recycle 20 --recycle-early-stop-tolerance 0.5 --num-seeds 10 --templates --custom-template-path ${BASE_DIR}/Massivefold.colabfold/templates ${BASE_DIR}/Massivefold.colabfold/model ; \
             conda deactivate")
 
 ############################################################

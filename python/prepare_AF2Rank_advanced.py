@@ -59,7 +59,7 @@ def integrate_and_filter_scores(base_dir, score_cutoff, num_cutoff):
     filtered_1st_len = len(filtered_scores)
     print(f'score_thresh_filtered_len : {filtered_1st_len}')
     
-    N_select = min(int(len(sorted_scores) * num_cutoff), len(filtered_scores))
+    N_select = min(int(len(sorted_scores) * num_cutoff), 100)
     filtered_scores = filtered_scores[:N_select]
     filtered_2nd_len = len(filtered_scores)
     print(f'num_thresh_filtered_len : {filtered_2nd_len}')
@@ -153,7 +153,7 @@ def main(args):
     filtered_pdb_dir = os.path.join(af2rank_dir, 'inputs/')
     os.makedirs(filtered_pdb_dir, exist_ok=True)
     os.makedirs(os.path.join(af2rank_dir, 'ver.AF/'), exist_ok=True)
-    os.makedirs(os.path.join(af2rank_dir, 'ver.MULTIMER/'), exist_ok=True)
+    # os.makedirs(os.path.join(af2rank_dir, 'ver.MULTIMER/'), exist_ok=True)
     
     link_files(data_dir, filtered_pdb_dir, filtered_results)
     change_chain_ids(filtered_pdb_dir, chain_list)
