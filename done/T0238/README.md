@@ -17,7 +17,7 @@
 ```
 ### RANKING METHOD
 ```python
-AF2Rank considering symmetry (This model was No.3 in AF2Rank result)
+AF2Rank considering symmetry (This model ranked 3rd in the AF2Rank results)
 ```
 <br/>
 <br/>
