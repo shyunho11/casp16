@@ -24,7 +24,7 @@ AF2Rank
 
 ## model_2
 ### METHOD
-    ColabFold with HHblits-BFD MSA
+    ColabFold with UltimaeMSA
 ### STOICHIOMETRY
     A2
 ### COLABFOLD SETTING
@@ -40,7 +40,7 @@ AF2Rank
 
 ## model_3
 ### METHOD
-    ColabFold with UltimateMSA
+    ColabFold with HHblits-BFD MSA
 ### STOICHIOMETRY
     A4
 ### COLABFOLD SETTING
