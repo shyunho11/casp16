@@ -15,7 +15,7 @@
 ```python
 --num-seeds 20 --model-type alphafold2_multimer_v3
 ```
-### RANKING METHOD
+### RANKING
 ```python
 AF2Rank considering symmetry (This model ranked 3rd in the AF2Rank results)
 ```
@@ -31,9 +31,9 @@ AF2Rank considering symmetry (This model ranked 3rd in the AF2Rank results)
 ```python
 --num-seeds 20 --model-type alphafold2_multimer_v3
 ```
-### RANKING METHOD
+### RANKING
 ```python
-AF2Rank without considering symmetry
+AF2Rank without considering symmetry (This model ranked 1st in the AF2Rank results)
 ```
 <br/>
 <br/>
@@ -43,9 +43,9 @@ AF2Rank without considering symmetry
     ColabFold with Ultimate MSA
 ### STOICHIOMETRY
     A2
-### RANKING METHOD
+### RANKING
 ```python
-AF2Rank without considering symmetry
+AF2Rank without considering symmetry (This model ranked 2nd in the AF2Rank results)
 ```
 <br/>
 <br/>
@@ -53,6 +53,8 @@ AF2Rank without considering symmetry
 ## model_4
 ### METHOD
     MiniWorld by PSK
+### STOICHIOMETRY
+    A2
 ### RANKING
 ```python
 AF2Rank
@@ -63,6 +65,8 @@ AF2Rank
 ## model_5
 ### METHOD
     MiniWorld by PSK
+### STOICHIOMETRY
+    A2
 ### RANKING
 ```python
 AF2Rank
