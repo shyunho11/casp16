@@ -8,38 +8,30 @@
 # MODEL INFO
 ## model_1
 ### METHOD
-    ColabFold with Ultimate MSA
+    ColabFold with UltimateMSA (without templates)
 ### COLABFOLD SETTING
 ```python
---num-seeds 50 --model-type alphafold2_multimer_v3
-```
-### HHFILTER SETTING
-```python
--id 90 -cov 50
+--num-seeds 5 --model-type alphafold2_multimer_v2
 ```
 <br/>
 <br/>
 
 ## model_2
 ### METHOD
-    ColabFold with NCBI Virus custom MSA
+    ColabFold with UltimateMSA (without templates)
 ### COLABFOLD SETTING
 ```python
---num-seeds 50 --model-type alphafold2_multimer_v3
-```
-### HHFILTER SETTING
-```python
--id 90 -cov 50
+--num-seeds 5 --model-type alphafold2_multimer_v2
 ```
 <br/>
 <br/>
 
 ## model_3
 ### METHOD
-    ColabFold with UltimateMSA
+    ColabFold with UltimateMSA (without templates)
 ### COLABFOLD SETTING
 ```python
---num-seeds 50 --model-type alphafold2_multimer_v3
+--num-seeds 5 --model-type alphafold2_multimer_v2
 ```
 <br/>
 <br/>
