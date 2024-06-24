@@ -3,7 +3,7 @@
 #SBATCH -p cpu
 #SBATCH -c 4
 #SBATCH --mem=32g
-#SBATCH -w node01
+#SBATCH -w node02
 #SBATCH -o log_relax_%A.log
 
 # Check if the final model directory is given

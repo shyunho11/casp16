@@ -59,7 +59,7 @@ def integrate_and_filter_scores(base_dir, score_cutoff, num_cutoff):
     filtered_1st_len = len(filtered_scores)
     print(f'score_thresh_filtered_len : {filtered_1st_len}')
     
-    N_select = min(int(len(sorted_scores) * num_cutoff), 100)
+    N_select = int(len(sorted_scores) * num_cutoff)
     filtered_scores = filtered_scores[:N_select]
     filtered_2nd_len = len(filtered_scores)
     print(f'num_thresh_filtered_len : {filtered_2nd_len}')
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     argparser.add_argument("--chain_list", type=str, help="chain list of decoys (e.g. A,B,C,D)")
     argparser.add_argument("--state", type=str, help="monomer or multimer")
     argparser.add_argument("--score_cutoff", type=float, default=0.8, help="A model will be discarded if its score is lower than TOP 1 score * this cutoff")
-    argparser.add_argument("--num_cutoff", type=float, default=0.05, help="The ratio of AF2Rank candidates to all models will be less than this cutoff")
+    argparser.add_argument("--num_cutoff", type=float, default=0.1, help="The ratio of AF2Rank candidates to all models will be less than this cutoff")
     args = argparser.parse_args()
     main(args)
     
