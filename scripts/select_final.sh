@@ -48,6 +48,7 @@ else
     rank_file="RANK_BY_COMPOSITE.csv"
 fi
 
+echo "Selecting final models using $rank_file"
 top_files=$(awk -F',' 'NR > 1 {print $1}' "$rank_file" | head -n 5)
 
 counter=1

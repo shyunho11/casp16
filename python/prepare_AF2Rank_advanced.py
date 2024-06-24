@@ -59,8 +59,7 @@ def integrate_and_filter_scores(base_dir, score_cutoff, num_cutoff):
     filtered_1st_len = len(filtered_scores)
     print(f'score_thresh_filtered_len : {filtered_1st_len}')
     
-    N_select = int(len(sorted_scores) * num_cutoff)
-    filtered_scores = filtered_scores[:N_select]
+    filtered_scores = filtered_scores[:int(len(sorted_scores) * num_cutoff)]
     filtered_2nd_len = len(filtered_scores)
     print(f'num_thresh_filtered_len : {filtered_2nd_len}')
     
