@@ -10,8 +10,8 @@
 # MODEL INFO
 ## model_1
 ### METHOD
-    [FRONT] ColabFold resi 1-500 best model + [BACK] Human model 1
-### COLABFOLD SETTING: RESI 1-500 / ULIIMATE MSA / HUMAN MODEL 1 TEMPLATE
+    [FRONT] ColabFold resi 1-500 best model + [BACK] Human model 1 (=hum1)
+### COLABFOLD SETTING: RESI 1-500 / ULIIMATE MSA
 ```python
 --templates --custom-template-path hum1 --num-seeds 2 --num-recycle 10 --model-type alphafold2_multimer_v3
 ```
@@ -41,7 +41,7 @@ save merged.pdb, merged
 ```python
 --templates --custom-template-path hum1 --num-seeds 1 --model-type alphafold2_multimer_v3
 ```
-### COLABFOLD SETTING: RESI 1-500 / ULIIMATE MSA / HUMAN MODEL 1 TEMPLATE
+### COLABFOLD SETTING: RESI 1-500 / ULIIMATE MSA
 ```python
 --templates --custom-template-path hum1 --num-seeds 2 --num-recycle 10 --model-type alphafold2_multimer_v3
 ```
@@ -70,7 +70,7 @@ save merged.pdb, merged
 ```python
 --templates --custom-template-path hum1 --num-seeds 1 --model-type alphafold2_multimer_v3
 ```
-### COLABFOLD SETTING: RESI 1-500 / ULIIMATE MSA / HUMAN MODEL 1 TEMPLATE
+### COLABFOLD SETTING: RESI 1-500 / ULIIMATE MSA
 ```python
 --templates --custom-template-path hum1 --num-seeds 2 --num-recycle 10 --model-type alphafold2_multimer_v3
 ```
@@ -84,7 +84,7 @@ TMalign
 ## model_4
 ### METHOD
     [FRONT] ColabFold resi 1-500 best model + [BACK] hum1
-### COLABFOLD SETTING: RESI 1-500 / ULIIMATE MSA / HUMAN MODEL 1 TEMPLATE
+### COLABFOLD SETTING: RESI 1-500 / ULIIMATE MSA
 ```python
 --templates --custom-template-path hum1 --num-seeds 2 --num-recycle 10 --model-type alphafold2_multimer_v3
 ```
