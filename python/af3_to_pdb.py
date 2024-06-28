@@ -28,6 +28,8 @@ def add_bfactor_plddt(structure, data_json_file):
                     else:
                         print("Warning: Not enough pLDDT scores to cover all atoms.")
                         return
+    
+    return sum(plddt_scores) / len(plddt_scores)
 
 def extract_iptm_ptm(summary_json_file):
     with open(summary_json_file, 'r') as file:
@@ -75,13 +77,14 @@ if __name__ == "__main__":
         data_json_file = f"fold_{name}_full_data_{rank}.json"
         summary_json_file = f"fold_{name}_summary_confidences_{rank}.json"
         
-        add_bfactor_plddt(structure, data_json_file)
+        plddt = add_bfactor_plddt(structure, data_json_file)
         iptm, ptm = extract_iptm_ptm(summary_json_file)
-
+        
+        plddt_str = f"_pLDDT{plddt:.2f}" if plddt is not None else ""
         iptm_str = f"_ipTM{iptm:.2f}" if iptm is not None else ""
         ptm_str = f"_pTM{ptm:.2f}" if ptm is not None else ""
-        output_file = f"af3_{name}_rank{int(rank) + 1}{iptm_str}{ptm_str}.pdb"
-        pae_plot = f"af3_{name}_rank{int(rank) + 1}{iptm_str}{ptm_str}.png"
+        output_file = f"af3_{name}_rank{int(rank) + 1}{plddt_str}{ptm_str}{iptm_str}.pdb"
+        pae_plot = f"af3_{name}_rank{int(rank) + 1}{plddt_str}{ptm_str}{iptm_str}.png"
         
         structure_to_pdb(structure, output_file)
         save_pae_plot(data_json_file, pae_plot)

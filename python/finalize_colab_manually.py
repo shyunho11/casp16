@@ -1,10 +1,12 @@
 import os
 import sys
+import json
 import pandas as pd
+import matplotlib.pyplot as plt
 from datetime import datetime
 
 if len(sys.argv) != 2:
-    ('Usage: python unfinished_colab_run.py <Unfinished ColabFold run path>')
+    ('Usage: python finalize_colab_manually.py <Unfinished ColabFold run path>')
     sys.exit(1)
     
 run_path = sys.argv[1]
@@ -83,4 +85,42 @@ with open(log_file, 'a') as f:
         if os.path.isfile(pdb_file):
             os.rename(pdb_file, new_pdb_file)
             print(f'File renamed as {new_pdb_file}')
-            
+
+# Read top model scores for plotting
+top_models = df['model'][:5]
+scores = []
+
+for model in top_models:
+    score_file = os.path.join(run_path, f'{query[0]}_scores_{model}.json')
+    with open(score_file, 'r') as f:
+        score = json.load(f)
+    scores.append(score)
+
+# Plot PAE
+pae_plot_file = os.path.join(run_path, f'{query[0]}_{top_models[0].split("model")[0]}pae.png')
+N_models = len(scores)
+
+plt.figure(figsize=(3 * N_models, 2), dpi=200)
+for i in range(N_models):
+    plt.subplot(1, N_models, i + 1)
+    plt.title(f'rank_{i + 1}')
+    plt.imshow(scores[i]['pae'], cmap='bwr', vmin=0, vmax=30)
+    plt.colorbar()
+plt.savefig(pae_plot_file, dpi=200, bbox_inches='tight')
+plt.close()
+print(f'PAE plot saved as {pae_plot_file}')
+
+# Plot pLDDT
+plddt_plot_file = os.path.join(run_path, f'{query[0]}_{top_models[0].split("model")[0]}plddt.png')
+positions = range(len(scores[0]['plddt']))
+
+plt.figure(figsize=(10, 6), dpi=200)
+for i in range(N_models):
+    plt.plot(positions, scores[i]['plddt'], label=f'rank_{i + 1}')
+plt.xlabel("Positions")
+plt.ylabel("Predicted IDDT")
+plt.title("Predicted IDDT per position")
+plt.legend()
+plt.savefig(plddt_plot_file, dpi=200, bbox_inches='tight')
+plt.close()
+print(f'pLDDT plot saved as {plddt_plot_file}')

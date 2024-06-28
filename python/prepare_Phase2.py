@@ -86,7 +86,7 @@ job_prev=$(submit -p $NODE_CPU -c $CPU --mem=${MEM}g -w node01 \
 ############################################################
 
 # run with AF version
-job_prev=$(submit -p $NODE -c $CPU --mem=${MEM}g --gres=gpu:A5000:1 \
+job_prev=$(submit -p $NODE -c $CPU --mem=${MEM}g --gres=gpu:A6000:1 \
     -J "${TARGET}.AF2Rank.AF" \
     -o "${BASE_DIR}/Massivefold.AF2Rank/ver.AF/%x.out" \
     -e "${BASE_DIR}/Massivefold.AF2Rank/ver.AF/%x.err" \
@@ -127,7 +127,7 @@ job_prev=$(submit -p $NODE_CPU -c $CPU --mem=${MEM}g -w node01 \
 # 5. Run Colabfold
 ############################################################
 
-job_prev=$(submit -p $NODE -c $CPU --mem=${MEM}g --gres=gpu:A5000:1 \
+job_prev=$(submit -p $NODE -c $CPU --mem=${MEM}g --gres=gpu:A6000:1 \
     -J "${TARGET}.Colabfold" \
     -o "${BASE_DIR}/Massivefold.colabfold/%x.out" \
     -e "${BASE_DIR}/Massivefold.colabfold/%x.err" \

@@ -34,11 +34,8 @@ def process_log_file(file_path, rank_by_composite_file, rank_by_custom_file):
         else:
             return row["i_ptm"] * 0.8 + row["ptm"] * 0.2
 
-    df["custom_score"] = df.apply(calculate_custom_score, axis=1)
-
-    # Add multimer column
-    df["multimer"] = df.apply(lambda row: row["i_ptm"] * 0.8 + row["ptm"] * 0.2 if row["i_ptm"] != 0 else None, axis=1)
-
+    df["custom_score"] = df.apply(calculate_custom_score, axis=1).round(4)
+    
     # Rank by composite score
     df_rank_composite = df.sort_values(by="composite", ascending=False).reset_index(drop=True)
     df_rank_composite.to_csv(rank_by_composite_file, index=False)
